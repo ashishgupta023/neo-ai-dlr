@@ -4,10 +4,14 @@ from __future__ import absolute_import as _abs
 import abc
 import glob
 import os
+import logging
 from .neologger import create_logger
 
 neo_logger = None
 try:
+    print(os.path.exists("/opt"))
+    print(os.path.exists("/opt/ml"))
+    print(os.path.exists("/opt/ml/errors"))
     neo_logger = create_logger()
 except Exception as ex:
     print(str(ex))
@@ -71,9 +75,13 @@ class DLRModel(IDLRModel):
                 if dev_type is not None:
                     if neo_logger is not None:
                         neo_logger.warn("dev_type parameter is not supported")
+                    else:
+                        logging.warning("dev_type parameter is not supported")
                 if dev_id is not None:
                     if neo_logger is not None:
                         neo_logger.warn("dev_id parameter is not supported")
+                    else:
+                        logging.warning("dev_id parameter is not supported")
                 from .tflite_model import TFLiteModelImpl
                 self._impl = TFLiteModelImpl(tflite_model_path)
                 return
