@@ -16,7 +16,8 @@ try:
     print("/opt/ml/output {}".format(os.path.exists("/opt/ml/output")))
     print("/opt/ml/model {}".format(os.path.exists("/opt/ml/model")))
     print("/opt/ml/errors {}".format(os.path.exists("/opt/ml/errors")))
-    print("permissions /opt/ml/errors {}".format(os.system("ls -l /opt/ml/")))
+    print("permissions /opt/ml/ {}".format(os.system("ls -l /opt/ml/")))
+    print("permissions /opt/ml/errors {}".format(os.system("ls -l /opt/ml/errors")))
     neo_logger = create_logger()
 except Exception as ex:
     print(str(ex))
