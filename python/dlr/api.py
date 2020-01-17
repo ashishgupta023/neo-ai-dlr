@@ -10,12 +10,12 @@ from .neologger import create_logger
 neo_logger = None
 try:
     print("------testing------")
-    print(os.path.exists("/opt"))
-    print(os.path.exists("/opt/ml"))
-    print(os.path.exists("/opt/ml/input"))
-    print(os.path.exists("/opt/ml/output"))
-    print(os.path.exists("/opt/ml/model"))
-    print(os.path.exists("/opt/ml/errors"))
+    print("/opt {}".format(os.path.exists("/opt")))
+    print("/opt/ml {}".format(os.path.exists("/opt/ml")))
+    print("/opt/ml/input {}".format(os.path.exists("/opt/ml/input")))
+    print("/opt/ml/output {}".format(os.path.exists("/opt/ml/output")))
+    print("/opt/ml/model {}".format(os.path.exists("/opt/ml/model")))
+    print("/opt/ml/errors {}".format(os.path.exists("/opt/ml/errors")))
     neo_logger = create_logger()
 except Exception as ex:
     print(str(ex))
