@@ -9,8 +9,12 @@ from .neologger import create_logger
 
 neo_logger = None
 try:
+    print("------testing------")
     print(os.path.exists("/opt"))
     print(os.path.exists("/opt/ml"))
+    print(os.path.exists("/opt/ml/input"))
+    print(os.path.exists("/opt/ml/output"))
+    print(os.path.exists("/opt/ml/model"))
     print(os.path.exists("/opt/ml/errors"))
     neo_logger = create_logger()
 except Exception as ex:
