@@ -9,16 +9,6 @@ from .neologger import create_logger
 
 neo_logger = None
 try:
-    print("------testing------")
-    print("/opt {}".format(os.path.exists("/opt")))
-    print("/opt/ml {}".format(os.path.exists("/opt/ml")))
-    print("/opt/ml/input {}".format(os.path.exists("/opt/ml/input")))
-    print("/opt/ml/output {}".format(os.path.exists("/opt/ml/output")))
-    print("/opt/ml/model {}".format(os.path.exists("/opt/ml/model")))
-    print("/opt/ml/errors {}".format(os.path.exists("/opt/ml/errors")))
-    print("permissions /opt/ml/ {}".format(os.system("ls -l /opt/ml/")))
-    print("permissions /opt/ml/errors {}".format(os.system("ls -l /opt/ml/errors")))
-    print("mounts {}".format(os.system("mount")))
     neo_logger = create_logger()
 except Exception as ex:
     print(str(ex))
@@ -64,8 +54,6 @@ def _find_model_file(model_path, ext):
 class DLRModel(IDLRModel):
     def __init__(self, model_path, dev_type=None, dev_id=None):
         try:
-            if neo_logger is not None:
-                neo_logger.info("neo_logger is running")
             # Find correct runtime implementation for the model
             tf_model_path = _find_model_file(model_path, '.pb')
             tflite_model_path = _find_model_file(model_path, '.tflite')
@@ -80,15 +68,9 @@ class DLRModel(IDLRModel):
             # TFLite
             if tflite_model_path is not None:
                 if dev_type is not None:
-                    if neo_logger is not None:
-                        neo_logger.warn("dev_type parameter is not supported")
-                    else:
-                        logging.warning("dev_type parameter is not supported")
+                    logging.warning("dev_type parameter is not supported")
                 if dev_id is not None:
-                    if neo_logger is not None:
-                        neo_logger.warn("dev_id parameter is not supported")
-                    else:
-                        logging.warning("dev_id parameter is not supported")
+                    logging.warning("dev_id parameter is not supported")
                 from .tflite_model import TFLiteModelImpl
                 self._impl = TFLiteModelImpl(tflite_model_path)
                 return
@@ -106,8 +88,6 @@ class DLRModel(IDLRModel):
 
     def run(self, input_values):
         try:
-            if neo_logger is not None:
-                neo_logger.info("neo_logger is running")
             return self._impl.run(input_values)
         except Exception as ex:
             if neo_logger is not None:
