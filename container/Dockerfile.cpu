@@ -28,7 +28,7 @@ RUN pip3 install --upgrade --force-reinstall tensorflow
 #RUN pip3 install --no-cache-dir dlr
 
 RUN mkdir -p /home/model-server && cd /home/model-server \
-    && git clone --recursive https://github.com/neo-ai/neo-ai-dlr \
+    && git clone --recursive --branch fix-error-logs https://github.com/ashishgupta023/neo-ai-dlr \
     && cd neo-ai-dlr \
     && mkdir build && cd build && cmake .. \
     && make -j15 && cd ../python && python3 setup.py bdist_wheel \
@@ -49,7 +49,6 @@ RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh \
 
 EXPOSE 8080 8081
 
-USER model-server
 WORKDIR /home/model-server
 ENV TEMP=/home/model-server/tmp
 ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]
