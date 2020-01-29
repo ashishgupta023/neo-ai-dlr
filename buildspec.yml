@@ -9,7 +9,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_ID --region us-west-2)
       - git status
-      - git submodule update —init —recursive
+      - git submodule update --init --recursive
       - ls -l
   build:
     commands:
