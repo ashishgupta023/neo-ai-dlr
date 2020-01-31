@@ -10,7 +10,6 @@ phases:
       - $(aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_ID --region us-west-2)
       - git config --global url."git@github.com:".insteadOf "https://github.com/"
       - git init
-      - git remote add origin git@github.com:ashishgupta023/neo-ai-dlr.git
       - git fetch
       - git checkout -t origin/master-docker-build2
       - git submodule init
