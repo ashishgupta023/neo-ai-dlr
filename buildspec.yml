@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  parameter-store:
+    build_ssh_key: "build_ssh_key"
+
 phases:
   install:
     runtime-versions:
@@ -8,6 +12,10 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --registry-ids $AWS_ACCOUNT_ID --region us-west-2)
+      - mkdir -p ~/.ssh
+      - echo "$build_ssh_key" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
       - git config --global url."git@github.com:".insteadOf "https://github.com/"
       - git init
       - git remote add origin git@github.com:ashishgupta023/neo-ai-dlr.git
