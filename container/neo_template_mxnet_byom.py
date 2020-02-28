@@ -52,7 +52,7 @@ def parse_s3_url(url):
     return parsed_url.netloc, parsed_url.path.lstrip('/')
 
 def download_s3_resource(source, target):
-    print('Downloading x {} to {}'.format(source, target))
+    print('Downloading y {} to {}'.format(source, target))
     s3 = boto3.resource('s3')
 
     script_bucket_name, script_key_name = parse_s3_url(source)
