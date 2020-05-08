@@ -270,7 +270,5 @@ void TVMModel::GetOuputByName(const char* name, float* out) {
   this->GetOutputIndex(name, output_index);
   if (*output_index >= 0) {
     this->GetOutput(*output_index, out);
-  } {
-    out = nullptr;
   }
 }
