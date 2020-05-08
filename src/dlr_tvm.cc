@@ -31,6 +31,8 @@ ModelPath dlr::GetTvmPaths(std::vector<std::string> dirname) {
       paths.params = filename;
     } else if (filename == "version.json") {
       paths.ver_json = filename;
+    } else if (EndsWith(filename, ".meta")) {
+      paths.metadata = filename;
     }
   }
   if (paths.model_json.empty() || paths.model_lib.empty() ||
@@ -62,6 +64,13 @@ void TVMModel::SetupTVMModule(std::vector<std::string> model_path) {
   if (!IsFileEmpty(paths.model_lib)) {
     module = tvm::runtime::Module::LoadFromFile(paths.model_lib);
   }
+  if (!paths.metadata.empty() && !IsFileEmpty(paths.metadata)) {
+    LOG(INFO) << "Loading metadata file: " << paths.metadata;
+    LoadJsonFromFile(paths.metadata, this->metadata);
+  } else {
+    LOG(INFO) << "No metadata found";
+  }
+
   tvm_graph_runtime_ = tvm::runtime::make_object<tvm::runtime::GraphRuntime>();
   tvm_graph_runtime_->Init(json_blob.str(), module, {ctx_});
   tvm_graph_runtime_->LoadParams(param_blob.str());
@@ -196,5 +205,72 @@ void TVMModel::UseCPUAffinity(bool use) {
   } else {
     SetEnv("TVM_BIND_THREADS", "0");
     LOG(INFO) << "CPU Affinity is disabled";
+  }
+}
+
+bool TVMModel::HasMetadata() const {
+  if (this->metadata != nullptr) {
+    return true;
+  }
+  return false;
+}
+
+void TVMModel::GetOutputNames(char**& names) const {
+  names = (char**) malloc(this->num_outputs_);
+  std::string name;
+
+  for(int i = 0; i < this->num_outputs_; i+=1) {
+    name = this->metadata["Model"]["Outputs"][i]["name"];
+    names[i] = (char *)malloc((name.size() + 1)*sizeof(char));
+    strcpy(names[i], name.c_str());
+  }
+}
+
+void TVMModel::GetInputNames(char**& names) const {
+  names = (char**) malloc(this->num_inputs_);
+  std::string name;
+
+  for(int i = 0; i < this->num_outputs_; i+=1) {
+    name = this->metadata["Model"]["Inputs"][i]["name"];
+    names[i] = (char *)malloc((name.size() + 1)*sizeof(char));
+    strcpy(names[i], name.c_str());
+  }
+}
+
+void TVMModel::GetOutputIndex(const char* name, int* index) const {
+  char** output_names;
+  this->GetOutputNames(output_names);
+  int idx = -1;
+
+  for (int i = 0; i < this->num_outputs_; i+=1) {
+    if (strcmp(name, output_names[i]) == 0) {
+      idx = i;
+      break;
+    }
+  } 
+  *index = idx;
+}
+
+void TVMModel::GetInputIndex(const char* name, int* index) const {
+  char** input_names;
+  this->GetInputNames(input_names);
+  int idx = -1;
+
+  for (int i = 0; i < this->num_outputs_; i+=1) {
+    if (strcmp(name, input_names[i]) == 0) {
+      idx = i;
+      break;
+    }
+  } 
+  *index = idx;
+}
+
+void TVMModel::GetOuputByName(const char* name, float* out) {
+  int* output_index;
+  this->GetOutputIndex(name, output_index);
+  if (*output_index >= 0) {
+    this->GetOutput(*output_index, out);
+  } {
+    out = nullptr;
   }
 }

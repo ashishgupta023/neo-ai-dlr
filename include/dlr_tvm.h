@@ -3,6 +3,7 @@
 
 #include <graph/graph_runtime.h>
 #include <tvm/runtime/memory.h>
+#include <nlohmann/json.hpp>
 
 #include "dlr_common.h"
 
@@ -20,6 +21,7 @@ class TVMModel : public DLRModel {
   std::shared_ptr<tvm::runtime::Module> tvm_module_;
   std::vector<const DLTensor*> outputs_;
   std::vector<std::string> weight_names_;
+  nlohmann::json metadata;
   void SetupTVMModule(std::vector<std::string> model_path);
 
  public:
@@ -43,6 +45,18 @@ class TVMModel : public DLRModel {
   virtual const char* GetBackend() const override;
   virtual void SetNumThreads(int threads) override;
   virtual void UseCPUAffinity(bool use) override;
+
+  /*
+    Following methods use metadata file to lookup input and output names.
+  */
+  bool HasMetadata() const;
+  void GetInputNames(char**& names) const;
+  void GetOutputNames(char**& names) const;
+  
+  void GetOutputIndex(const char* name, int* index) const;
+  void GetInputIndex(const char* name, int* index) const;
+  
+  void GetOuputByName(const char* name, float* out);
 };
 
 }  // namespace dlr

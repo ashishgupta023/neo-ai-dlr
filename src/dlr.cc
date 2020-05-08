@@ -1,3 +1,4 @@
+#include <typeinfo>
 #include "dlr.h"
 
 #include "dlr_common.h"
@@ -102,6 +103,59 @@ extern "C" int GetDLRNumOutputs(DLRModelHandle* handle, int* num_outputs) {
   DLRModel* model = static_cast<DLRModel*>(*handle);
   CHECK(model != nullptr) << "model is nullptr, create it first";
   model->GetNumOutputs(num_outputs);
+  API_END();
+}
+
+extern "C" int GetDLRHasMetadata(DLRModelHandle* handle, bool* has_metadata) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  *has_metadata = model->HasMetadata();
+  API_END();
+}
+
+extern "C" int GetDLRInputNames(DLRModelHandle* handle, char*** names) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetInputNames(*names);
+  API_END();
+}
+
+extern "C" int GetDLROutputNames(DLRModelHandle* handle, char*** names) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetOutputNames(*names);
+  API_END();
+}
+
+extern "C" int GetDLROutputIndex(DLRModelHandle* handle, char* name, int* index) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetOutputIndex(name, index);
+  API_END();
+}
+
+extern "C" int GetDLRInputIndex(DLRModelHandle* handle, char* name, int* index) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetInputIndex(name, index);
+  API_END();
+}
+
+extern "C" int GetDLROuputByName(DLRModelHandle* handle, char* name, float* out) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetOuputByName(name, out);
   API_END();
 }
 

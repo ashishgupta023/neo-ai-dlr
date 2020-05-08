@@ -118,3 +118,10 @@ class DLRModel(IDLRModel):
         except Exception as ex:
             self.neo_logger.exception("error in getting version {} {}".format(self._impl.__class__.__name__, ex))
             raise ex
+
+    def has_metadata(self):
+        try:
+            return self._impl.has_metadata()
+        except Exception as ex:
+            self.neo_logger.exception("error in checking for metadata file {} {}".format(self._impl.__class__.__name__, ex))
+        

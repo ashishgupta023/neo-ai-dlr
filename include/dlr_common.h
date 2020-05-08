@@ -5,6 +5,7 @@
 #include <dmlc/logging.h>
 #include <runtime_base.h>
 #include <sys/types.h>
+#include <nlohmann/json.hpp>
 
 #include <string>
 #include <vector>
@@ -39,6 +40,7 @@ typedef struct {
   std::string params;
   std::string model_json;
   std::string ver_json;
+  std::string metadata;
 } ModelPath;
 
 void ListDir(const std::string& dirname, std::vector<std::string>& paths);
@@ -46,6 +48,8 @@ void ListDir(const std::string& dirname, std::vector<std::string>& paths);
 std::string GetBasename(const std::string& path);
 
 std::string GetParentFolder(const std::string& path);
+
+void LoadJsonFromFile(const std::string& path, nlohmann::json& jsonObject);
 
 inline bool StartsWith(const std::string& mainStr, const std::string& toMatch) {
   return mainStr.size() >= toMatch.size() &&
