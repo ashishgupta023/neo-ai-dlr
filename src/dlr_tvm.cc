@@ -230,7 +230,7 @@ void TVMModel::GetInputNames(char**& names) const {
   names = (char**) malloc(this->num_inputs_);
   std::string name;
 
-  for(int i = 0; i < this->num_outputs_; i+=1) {
+  for(int i = 0; i < this->num_inputs_; i+=1) {
     name = this->metadata["Model"]["Inputs"][i]["name"];
     names[i] = (char *)malloc((name.size() + 1)*sizeof(char));
     strcpy(names[i], name.c_str());

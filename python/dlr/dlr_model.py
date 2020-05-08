@@ -164,11 +164,12 @@ class DLRModelImpl(IDLRModel):
         return flag.value
     
     def _fetch_output_names(self):
-        names = POINTER(c_char_p)()
-        _check_call(_LIB.GetDLROutputNames(byref(self.handle), byref(names)))
         self.output_names = []
-        for i in range(self.num_outputs):
-            self.output_names.append(names[i].decode('utf-8'))
+        if self.has_metadata():
+            names = POINTER(c_char_p)()
+            _check_call(_LIB.GetDLROutputNames(byref(self.handle), byref(names)))
+            for i in range(self.num_outputs):
+                self.output_names.append(names[i].decode('utf-8'))
 
     def _fetch_input_names(self):
         if not self.has_metadata():
