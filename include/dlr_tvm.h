@@ -49,7 +49,7 @@ class TVMModel : public DLRModel {
   /*
     Following methods use metadata file to lookup input and output names.
   */
-  bool HasMetadata() const;
+  virtual bool HasMetadata() const override;
   void GetInputNames(char**& names) const;
   void GetOutputNames(char**& names) const;
   

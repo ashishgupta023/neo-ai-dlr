@@ -112,6 +112,10 @@ class DLRModel {
   virtual const char* GetBackend() const = 0;
   virtual void SetNumThreads(int threads) = 0;
   virtual void UseCPUAffinity(bool use) = 0;
+
+  virtual bool HasMetadata() const {
+    return false;
+  };
 };
 
 }  // namespace dlr
