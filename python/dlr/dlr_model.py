@@ -198,7 +198,7 @@ class DLRModelImpl(IDLRModel):
         data : list of numbers
             The data to be set.
         """
-        in_data = np.ascontiguousarray(data, dtype=np.float32)
+        in_data = np.ascontiguousarray(data)
         shape = np.array(in_data.shape, dtype=np.int64)
         self.input_shapes[name] = shape
         _check_call(_LIB.SetDLRInput(byref(self.handle),
@@ -282,7 +282,7 @@ class DLRModelImpl(IDLRModel):
             raise ValueError("index is expected between 0 and "
                              "len(output_shapes)-1, but got %d" % index)
 
-        output = np.zeros(self.output_size_dim[index][0], dtype=np.float32)
+        output = np.zeros(self.output_size_dim[index][0], dtype=np.uint8)
         _check_call(_LIB.GetDLROutput(byref(self.handle), c_int(index),
                     output.ctypes.data_as(ctypes.POINTER(ctypes.c_float))))
         out = output.reshape(self.output_shapes[index])
@@ -353,7 +353,7 @@ class DLRModelImpl(IDLRModel):
         if shape is None:
             shape = self.input_shapes[name]
         shape = np.array(shape)
-        out = np.zeros(shape.prod(), dtype=np.float32)
+        out = np.zeros(shape.prod(), dtype=np.uint8)
         _check_call(_LIB.GetDLRInput(byref(self.handle),
                                      c_char_p(name.encode('utf-8')),
                                      out.ctypes.data_as(ctypes.POINTER(ctypes.c_float))))
