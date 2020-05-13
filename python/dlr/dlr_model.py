@@ -119,6 +119,8 @@ class DLRModelImpl(IDLRModel):
         self.output_names = []
         self.weight_names = []
         self.input_shapes = {}   # Remember shape used in _set_input()
+        self.output_dtypes = []
+        self.input_dtypes = []
         
         for i in range(self.num_weights):
             self.weight_names.append(self._get_weight_name(i))
@@ -127,6 +129,8 @@ class DLRModelImpl(IDLRModel):
         self._lazy_init_output_shape()
         self._fetch_input_names()
         self._fetch_output_names()
+        self._fetch_input_dtypes()
+        self._fetch_output_dtypes()
 
     def __del__(self):
         if getattr(self, "handle", None) is not None and self.handle is not None:
@@ -181,14 +185,40 @@ class DLRModelImpl(IDLRModel):
             self.input_names = []
             for i in range(self.num_inputs):
                 self.input_names.append(names[i].decode('utf-8'))
-            
+    
+    def _fetch_output_dtypes(self):
+        self.output_dtypes = []
+        if self.has_metadata():
+            dtypes = POINTER(c_char_p)()
+            _check_call(_LIB.GetDLROuputDataTypes(byref(self.handle), byref(dtypes)))
+            for i in range(self.num_outputs):
+                self.output_dtypes.append(dtypes[i].decode('utf-8'))
+    
+    def _fetch_input_dtypes(self):
+        self.input_dtypes = []
+        if self.has_metadata():
+            dtypes = POINTER(c_char_p)()
+            _check_call(_LIB.GetDLRInputDataTypes(byref(self.handle), byref(dtypes)))
+            for i in range(self.num_inputs):
+                self.input_dtypes.append(dtypes[i].decode('utf-8'))
         
     def get_output_names(self):
         if not self.has_metadata():
             raise NotImplementedError
         else:
             return self.output_names
-            
+
+    def get_output_dtypes(self):
+        if not self.has_metadata():
+            raise NotImplementedError
+        else:
+            return self.output_dtypes
+
+    def get_input_dtypes(self):
+        if not self.has_metadata():
+            raise NotImplementedError
+        else:
+            return self.input_dtypes
 
     def get_version(self):
         """

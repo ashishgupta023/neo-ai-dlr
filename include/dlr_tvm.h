@@ -57,6 +57,9 @@ class TVMModel : public DLRModel {
   void GetInputIndex(const char* name, int* index) const;
   
   void GetOuputByName(const char* name, float* out);
+
+  void GetInputDataTypes(char**& dtypes) const;
+  void GetOuputDataTypes(char**& dtypes) const;
 };
 
 }  // namespace dlr

@@ -159,6 +159,24 @@ extern "C" int GetDLROuputByName(DLRModelHandle* handle, char* name, float* out)
   API_END();
 }
 
+extern "C" int GetDLRInputDataTypes(DLRModelHandle* handle, char*** dtypes) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetInputDataTypes(*dtypes);
+  API_END();
+}
+
+extern "C" int GetDLROuputDataTypes(DLRModelHandle* handle, char*** dtypes) {
+  API_BEGIN();
+  TVMModel* model = static_cast<TVMModel*>(*handle);
+  CHECK(model != nullptr) << "model is nullptr, create it first";
+  CHECK(model->HasMetadata()) << "model has no metadata";
+  model->GetOuputDataTypes(*dtypes);
+  API_END();
+}
+
 #ifdef DLR_TFLITE
 /*! \brief Translate c args from ctypes to std types for DLRModelFromTFLite
  * ctor.

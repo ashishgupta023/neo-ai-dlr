@@ -272,3 +272,25 @@ void TVMModel::GetOuputByName(const char* name, float* out) {
     this->GetOutput(*output_index, out);
   }
 }
+
+void TVMModel::GetInputDataTypes(char**& dtypes) const {
+  dtypes = (char**) malloc(this->num_inputs_);
+  std::string dtype;
+
+  for(int i = 0; i < this->num_inputs_; i+=1) {
+    dtype = this->metadata["Model"]["Inputs"][i]["dtype"];
+    dtypes[i] = (char *)malloc((dtype.size() + 1)*sizeof(char));
+    strcpy(dtypes[i], dtype.c_str());
+  }
+}
+
+void TVMModel::GetOuputDataTypes(char**& dtypes) const {
+  dtypes = (char**) malloc(this->num_outputs_);
+  std::string dtype;
+
+  for(int i = 0; i < this->num_outputs_; i+=1) {
+    dtype = this->metadata["Model"]["Outputs"][i]["dtype"];
+    dtypes[i] = (char *)malloc((dtype.size() + 1)*sizeof(char));
+    strcpy(dtypes[i], dtype.c_str());
+  }
+}
