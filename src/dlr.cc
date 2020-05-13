@@ -150,7 +150,7 @@ extern "C" int GetDLRInputIndex(DLRModelHandle* handle, char* name, int* index) 
   API_END();
 }
 
-extern "C" int GetDLROuputByName(DLRModelHandle* handle, char* name, float* out) {
+extern "C" int GetDLROutputByName(DLRModelHandle* handle, char* name, float* out) {
   API_BEGIN();
   TVMModel* model = static_cast<TVMModel*>(*handle);
   CHECK(model != nullptr) << "model is nullptr, create it first";

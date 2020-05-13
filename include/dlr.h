@@ -297,7 +297,7 @@ DLR_DLL int GetDLRInputIndex(DLRModelHandle* handle, char* name, int* index);
  array of size "size" from GetDLROutputSizeDim(). \return 0 for success, -1 for
  error. Call DLRGetLastError() to get the error message.
  */
-DLR_DLL int GetDLROuputByName(DLRModelHandle* handle, char* name, float* out);
+DLR_DLL int GetDLROutputByName(DLRModelHandle* handle, char* name, float* out);
 
 /*!
  \brief Gets the input node dtypes from the metadata file
