@@ -219,7 +219,7 @@ void TVMModel::GetOutputNames(char**& names) const {
   names = (char**) malloc(this->num_outputs_);
   std::string name;
 
-  for(int i = 0; i < this->num_outputs_; i+=1) {
+  for(int i = 0; i < this->num_outputs_; i++) {
     name = this->metadata["Model"]["Outputs"][i]["name"];
     names[i] = (char *)malloc((name.size() + 1)*sizeof(char));
     strcpy(names[i], name.c_str());
@@ -230,7 +230,7 @@ void TVMModel::GetInputNames(char**& names) const {
   names = (char**) malloc(this->num_inputs_);
   std::string name;
 
-  for(int i = 0; i < this->num_inputs_; i+=1) {
+  for(int i = 0; i < this->num_inputs_; i++) {
     name = this->metadata["Model"]["Inputs"][i]["name"];
     names[i] = (char *)malloc((name.size() + 1)*sizeof(char));
     strcpy(names[i], name.c_str());
@@ -242,7 +242,7 @@ void TVMModel::GetOutputIndex(const char* name, int* index) const {
   this->GetOutputNames(output_names);
   int idx = -1;
 
-  for (int i = 0; i < this->num_outputs_; i+=1) {
+  for (int i = 0; i < this->num_outputs_; i++) {
     if (strcmp(name, output_names[i]) == 0) {
       idx = i;
       break;
@@ -256,7 +256,7 @@ void TVMModel::GetInputIndex(const char* name, int* index) const {
   this->GetInputNames(input_names);
   int idx = -1;
 
-  for (int i = 0; i < this->num_outputs_; i+=1) {
+  for (int i = 0; i < this->num_outputs_; i++) {
     if (strcmp(name, input_names[i]) == 0) {
       idx = i;
       break;
@@ -277,7 +277,7 @@ void TVMModel::GetInputDataTypes(char**& dtypes) const {
   dtypes = (char**) malloc(this->num_inputs_);
   std::string dtype;
 
-  for(int i = 0; i < this->num_inputs_; i+=1) {
+  for(int i = 0; i < this->num_inputs_; i++) {
     dtype = this->metadata["Model"]["Inputs"][i]["dtype"];
     dtypes[i] = (char *)malloc((dtype.size() + 1)*sizeof(char));
     strcpy(dtypes[i], dtype.c_str());
@@ -288,7 +288,7 @@ void TVMModel::GetOuputDataTypes(char**& dtypes) const {
   dtypes = (char**) malloc(this->num_outputs_);
   std::string dtype;
 
-  for(int i = 0; i < this->num_outputs_; i+=1) {
+  for(int i = 0; i < this->num_outputs_; i++) {
     dtype = this->metadata["Model"]["Outputs"][i]["dtype"];
     dtypes[i] = (char *)malloc((dtype.size() + 1)*sizeof(char));
     strcpy(dtypes[i], dtype.c_str());

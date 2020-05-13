@@ -204,19 +204,19 @@ class DLRModelImpl(IDLRModel):
         
     def get_output_names(self):
         if not self.has_metadata():
-            raise NotImplementedError
+            raise DLRError("Model has no metadata!")
         else:
             return self.output_names
 
     def get_output_dtypes(self):
         if not self.has_metadata():
-            raise NotImplementedError
+            raise DLRError("Model has no metadata!")
         else:
             return self.output_dtypes
 
     def get_input_dtypes(self):
         if not self.has_metadata():
-            raise NotImplementedError
+            raise DLRError("Model has no metadata!")
         else:
             return self.input_dtypes
 
