@@ -53,8 +53,8 @@ class TVMModel : public DLRModel {
   void GetInputNames(char**& names) const;
   void GetOutputNames(char**& names) const;
   
-  void GetOutputIndex(const char* name, int* index) const;
   void GetInputIndex(const char* name, int* index) const;
+  void GetOutputIndex(const char* name, int* index) const;
   
   void GetOuputByName(const char* name, float* out);
 
