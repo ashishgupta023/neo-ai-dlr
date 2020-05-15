@@ -121,6 +121,7 @@ class DLRModelImpl(IDLRModel):
         self.input_shapes = {}   # Remember shape used in _set_input()
         self.output_dtypes = []
         self.input_dtypes = []
+        self.input_dtypes_map = {}
         
         for i in range(self.num_weights):
             self.weight_names.append(self._get_weight_name(i))
@@ -131,6 +132,7 @@ class DLRModelImpl(IDLRModel):
         self._fetch_output_names()
         self._fetch_input_dtypes()
         self._fetch_output_dtypes()
+        self._fetch_input_dtypes_map()
 
     def __del__(self):
         if getattr(self, "handle", None) is not None and self.handle is not None:
@@ -201,6 +203,12 @@ class DLRModelImpl(IDLRModel):
             _check_call(_LIB.GetDLRInputDataTypes(byref(self.handle), byref(dtypes)))
             for i in range(self.num_inputs):
                 self.input_dtypes.append(dtypes[i].decode('utf-8'))
+
+    def _fetch_input_dtypes_map(self):
+        self.input_dtypes_map = {}
+        if self.has_metadata() and len(self.input_dtypes) != 0 and len(self.input_names) != 0:
+            for i in range(len(self.input_names)):
+                self.input_dtypes_map[self.input_names[i]] = self.input_dtypes[i]
         
     def get_output_names(self):
         if not self.has_metadata():
@@ -252,7 +260,11 @@ class DLRModelImpl(IDLRModel):
         data : list of numbers
             The data to be set.
         """
-        in_data = np.ascontiguousarray(data, dtype=np.float32)
+        if name in self.input_dtypes_map:
+            expected_input_dtype = self.input_dtypes_map[name]
+            if str(data.dtype) != expected_input_dtype:
+                raise ValueError("input_values must be of type {}".format(expected_input_dtype))
+        in_data = np.ascontiguousarray(data)
         shape = np.array(in_data.shape, dtype=np.int64)
         self.input_shapes[name] = shape
         _check_call(_LIB.SetDLRInput(byref(self.handle),
@@ -335,8 +347,10 @@ class DLRModelImpl(IDLRModel):
         if index >= len(self.output_shapes) or index < 0:
             raise ValueError("index is expected between 0 and "
                              "len(output_shapes)-1, but got %d" % index)
-
-        output = np.zeros(self.output_size_dim[index][0], dtype=np.float32)
+        output_dtype = np.float32
+        if len(self.output_dtypes) != 0:
+            output_dtype = np.dtype(self.output_dtypes[index])
+        output = np.zeros(self.output_size_dim[index][0], dtype=output_dtype)
         _check_call(_LIB.GetDLROutput(byref(self.handle), c_int(index),
                     output.ctypes.data_as(ctypes.POINTER(ctypes.c_float))))
         out = output.reshape(self.output_shapes[index])
@@ -407,7 +421,10 @@ class DLRModelImpl(IDLRModel):
         if shape is None:
             shape = self.input_shapes[name]
         shape = np.array(shape)
-        out = np.zeros(shape.prod(), dtype=np.float32)
+        input_dtype = np.float32
+        if name in self.input_dtypes_map:
+            input_dtype = np.dtype(self.input_dtypes_map[name])
+        out = np.zeros(shape.prod(), dtype=input_dtype)
         _check_call(_LIB.GetDLRInput(byref(self.handle),
                                      c_char_p(name.encode('utf-8')),
                                      out.ctypes.data_as(ctypes.POINTER(ctypes.c_float))))
