@@ -65,11 +65,7 @@ RUN wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSIO
  && make install \
  && rm -rf ../Python-$PYTHON_VERSION* \
  && ln -s /usr/local/bin/pip3 /usr/bin/pip \
- && rm -rf /var/lib/apt/lists/* \
- && make \
- && make install \
- && rm -rf ../Python-$PYTHON_VERSION* \
- && ln -s /usr/local/bin/pip3 /usr/bin/pip
+ && rm -rf /var/lib/apt/lists/*
 
 RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
 
